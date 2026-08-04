@@ -10,8 +10,8 @@
 
 #define MOUSE 1
 #define MARK 2
-#define CURSOR 3
-#define FUNCTION 4
+#define NUMFUNC 3
+#define CURSOR 4
 #define SCROLL 5
 #define WIRELESS 6
 
@@ -47,7 +47,7 @@
 
 &msc_input_listener {
     speed_up {
-        layers = <FUNCTION>;
+        layers = <CURSOR>;
         input-processors = <&zip_wheel_scaler 3 1>; //スクロールを3倍速にする
     };
 };
@@ -100,6 +100,11 @@
             bindings = <&mkp MB5>;
             key-positions = <26 27>;
         };
+
+        BootLoader {
+            bindings = <&bootloader>;
+            key-positions = <4 8 24>;
+        };
     };
 
     behaviors {
@@ -123,16 +128,16 @@
 
         default_layer {
             bindings = <
-&kp Q          &kp W         &kp E               &kp R    &kp T                                      &kp Y        &kp U  &kp I                &kp O          &kp P
-&kp A          &kp S         &kp D               &kp F    &kp G                                      &kp H        &kp J  &kp K                &kp L          &lt 5 MINUS
-&kp Z          &kp X         &kp C               &kp V    &kp B                                      &kp N        &kp M  &kp COMMA            &kp DOT        &mt RIGHT_SHIFT BACKSPACE
-&mt LCTRL ESC  &kp LEFT_WIN  &mt LEFT_ALT GRAVE  &kp INS  &lt 5 ENTER  &lt 2 TAB    &lt 2 BACKSPACE  &lt 4 SPACE         &lt 6 RIGHT_BRACKET  &kp BACKSLASH  &mt RIGHT_SHIFT SLASH
+&kp Q             &kp W       &kp E        &kp R                  &kp T                                                    &kp Y              &kp U            &kp I          &kp O         &kp P
+&kp A             &kp S       &kp D        &kp F                  &kp G                                                    &kp H              &kp J            &kp K          &kp L         &lt SCROLL MINUS
+&mt LEFT_SHIFT Z  &kp X       &kp C        &kp V                  &kp B                                                    &kp N              &kp M            &kp COMMA      &kp DOT       &mt RIGHT_SHIFT SLASH
+&kp TAB           &kp LCTRL   &kp LALT     &mt LGUI LA(GRAVE)     &lt MARK SPACE     &lt NUMFUNC BACKSPACE    &lt CURSOR ENTER  &mt RGUI DEL                   &kp PAGE_DOWN  &kp PAGE_UP   &lt WIRELESS BACKSLASH
             >;
 
             sensor-bindings = <&mouse_scrl SCRL_DOWN SCRL_UP>;
         };
 
-        //1
+        //1  トラックボール操作で自動的に有効(AML) ※LiNEA40デフォルトのまま
 
         MOUSE {
             bindings = <
@@ -143,44 +148,42 @@
             >;
         };
 
-        //2
+        //2  記号レイヤー  左親指 SPACE 長押しで呼出
 
         MARK {
             bindings = <
-&kp EXCLAMATION             &kp AT           &kp HASH         &kp DOLLAR     &kp PERCENT                      &kp CARET     &kp AMPERSAND  &kp ASTERISK           &kp LEFT_PARENTHESIS  &kp LBKT
-&kp SLASH                   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp SEMICOLON  &kp SEMICOLON                    &kp C_MUTE    &kp LS(LBKT)   &kp RIGHT_BRACKET      &kp BACKSLASH         &kp EQUAL
-&mt LEFT_SHIFT KP_NUMBER_0  &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp APOS       &kp SQT                          &kp KP_EQUAL  &kp INT3       &kp LS(RIGHT_BRACKET)  &kp LS(BACKSLASH)     &kp LS(INT1)
-&trans                      &trans           &trans           &trans         &trans         &trans    &trans  &trans                       &kp ASTERISK           &kp LEFT_PARENTHESIS  &kp LS(QUESTION)
+&kp EXCL          &kp AT            &kp HASH          &kp DOLLAR  &kp PERCENT                    &kp CARET  &kp AMPS   &kp ASTERISK  &kp LPAR       &kp RPAR
+&kp LG(LS(N3))    &kp LG(LS(N4))    &kp LG(LS(N5))    &none       &none                          &kp MINUS  &kp EQUAL  &kp LBKT      &kp RBKT       &kp BSLH
+&none             &none             &none             &none       &none                          &none      &none      &kp SEMI      &kp SQT        &kp GRAVE
+&kp ESC           &none             &none             &none       &trans        &mo WIRELESS     &none      &none                    &none          &none         &none
             >;
 
             sensor-bindings = <&re_kp C_VOLUME_DOWN C_VOLUME_UP>;
         };
 
-        //3
+        //3  ファンクション+テンキー  左親指 BACKSPACE 長押しで呼出
+
+        NUMFUNC {
+            bindings = <
+&kp F1   &kp F2   &kp F3  &kp F4   &kp F5                     &kp N1  &kp N2  &kp N3  &kp PLUS      &kp MINUS
+&kp F6   &kp F7   &kp F8  &kp F9   &kp F10                    &kp N4  &kp N5  &kp N6  &kp ASTERISK  &kp SLASH
+&kp F11  &kp F12  &trans  &trans   &trans                     &kp N7  &kp N8  &kp N9  &none         &none
+&none    &none    &none   &none    &none   &trans    &kp DOT  &kp N0          &none   &none         &none
+            >;
+        };
+
+        //4  カーソル/ナビゲーション  右親指 ENTER 長押しで呼出
 
         CURSOR {
             bindings = <
-&trans    &kp LC(LG(LEFT_ARROW))  &kp UP_ARROW  &kp LC(LG(RIGHT_ARROW))  &trans                       &kp KP_MULTIPLY  &kp NUMBER_7  &kp NUMBER_8  &kp NUMBER_9  &kp KP_PLUS
-&trans    &kp LEFT_ARROW          &kp DOWN      &kp RIGHT_ARROW          &trans                       &kp KP_SLASH     &kp NUMBER_4  &kp NUMBER_5  &kp NUMBER_6  &kp KP_MINUS
-&kp HOME  &kp PAGE_DOWN           &kp END       &kp PAGE_UP              &trans                       &kp UNDER        &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp ENTER
-&trans    &trans                  &trans        &trans                   &trans  &trans    &kp ENTER  &kp NUMBER_0                   &kp DOT       &kp ENTER     &kp QUESTION
+&trans  &trans  &trans  &trans  &trans                    &kp LC(UP)    &kp LC(LEFT)   &kp UP    &kp LC(RIGHT)  &kp LC(DOWN)
+&trans  &trans  &trans  &trans  &trans                    &kp LC(A)     &kp LEFT       &kp DOWN  &kp RIGHT      &kp LC(E)
+&trans  &trans  &trans  &trans  &trans                    &kp C_PREV    &kp LG(LEFT)   &none     &kp LG(RIGHT)  &kp C_NEXT
+&none   &none   &none   &none   &none   &none    &trans  &none                         &kp C_BRI_DN  &kp C_BRI_UP  &none
             >;
         };
 
-        //4
-
-        FUNCTION {
-            bindings = <
-&kp F1  &kp F2  &kp F3  &kp F4   &kp F5                     &trans      &trans  &kp LA(PRINTSCREEN)  &trans  &kp LC(LA(DELETE))
-&kp F6  &kp F7  &kp F8  &kp F9   &kp F10                    &trans      &trans  &kp LS(LG(S))        &trans  &kp LC(LS(ESCAPE))
-&trans  &trans  &trans  &kp F11  &kp F12                    &kp C_MUTE  &trans  &trans               &trans  &kp LC(LA(INS))
-&trans  &trans  &trans  &trans   &trans   &trans    &trans  &trans              &trans               &trans  &trans
-            >;
-
-            sensor-bindings = <&mouse_scrl SCRL_DOWN SCRL_UP>;
-        };
-
-        //5
+        //5  スクロール(トラックボール)  ※LiNEA40デフォルトのまま
 
         SCROLL {
             bindings = <
@@ -193,7 +196,7 @@
             sensor-bindings = <&inc_dec_kp DOWN_ARROW UP_ARROW>;
         };
 
-        //6
+        //6  無線/システム
 
         WIRELESS {
             bindings = <
